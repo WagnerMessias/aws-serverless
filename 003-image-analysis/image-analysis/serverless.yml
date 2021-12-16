@@ -1,0 +1,19 @@
+org: wmessias
+app: image-analysis
+service: image-analysis
+
+frameworkVersion: '2 || 3'
+
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  lambdaHashingVersion: 20201221
+
+functions:
+  img-analysis:
+    handler: handler.main
+    events:
+      - http:
+          path: analyse
+          method: get
