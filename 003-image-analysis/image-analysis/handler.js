@@ -1,10 +1,20 @@
 'use strict';
-const { promises: { readFile } } = require('fs')
+//const { promises: { readFile } } = require('fs')
+const { get } = require('axios')
 class Handler{
 
   constructor({rekoService, translatorService}){
     this.rekoService = rekoService;
     this.translatorService = translatorService;
+  }
+
+  async getImageBuffer(imageUrl){
+    const response = await get(imageUrl,{
+      responseType: 'arraybuffer'
+    })
+
+    const buffer = Buffer.from(response.data, 'base64')
+    return buffer;
   }
 
   async detectImageLabels(buffer){
@@ -30,26 +40,48 @@ class Handler{
       Text: text
     }
 
-    const result = await this.translatorService
+    const { TranslatedText } = await this.translatorService
                                 .translateText(params)
                                 .promise()
-    console.log(JSON.stringify(result));
+    return TranslatedText.split(' e ');
+  }
+
+  formatTextResults(texts, workingItems){
+    const finalText = []
+    for(const indexText in texts){
+      const nameInPortuguese = texts[indexText]
+      const confidence = workingItems[indexText].Confidence
+      finalText.push(
+        `${confidence.toFixed(2)}% de ser do tipo ${nameInPortuguese}`
+      )
+    }
+
+    return finalText.join('\n');
   }
 
   async main(event){
     try {
+      const { imageUrl } = event.queryStringParameters
   
-      const imgBuffer = await readFile('./img/scorpion.jpeg')
-      
+      //const imgBuffer = await readFile('./img/scorpion.jpeg')
+      console.log('Downloading image...')
+      const imgBuffer = await this.getImageBuffer(imageUrl)
+
       console.log('Detecting labels...')
       const {names, workingItems} = await this.detectImageLabels(imgBuffer)
 
       console.log('Translating to Portuguese...')
       const texts = await this.translateText(names)
 
+      console.log('Handling final object')
+      const finalText = this.formatTextResults(texts,workingItems)
+      
+      console.log('Finashing...')
+
+      
       return {
         statusCode:200,
-        body:'Hello Everyone!'
+        body:`A imagem tem:\n`.concat(finalText)
       }
       
     } catch (error) {
