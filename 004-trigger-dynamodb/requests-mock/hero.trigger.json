@@ -1,0 +1,40 @@
+{
+    "Records": [
+      {
+        "eventID": "7d33ba2932e3c75d514bdc32f7b51c46",
+        "eventName": "INSERT",
+        "eventVersion": "1.1",
+        "eventSource": "aws:dynamodb",
+        "awsRegion": "us-east-1",
+        "dynamodb": {
+          "ApproximateCreationDateTime": 1641700571,
+          "Keys": {
+            "nome": {
+              "S": "Rambo"
+            },
+            "id": {
+              "S": "151bb9c0-7100-11ec-8c1e-6b50a7b2f26b"
+            }
+          },
+          "NewImage": {
+            "createdAt": {
+              "S": "2022-01-09T03:56:10.973Z"
+            },
+            "nome": {
+              "S": "Rambo"
+            },
+            "id": {
+              "S": "151bb9c0-7100-11ec-8c1e-6b50a7b2f26b"
+            },
+            "poder": {
+              "S": "Bala"
+            }
+          },
+          "SequenceNumber": "1047200000000022891861200",
+          "SizeBytes": 136,
+          "StreamViewType": "NEW_AND_OLD_IMAGES"
+        },
+        "eventSourceARN": "arn:aws:dynamodb:us-east-1:202003373504:table/Heros/stream/2022-01-09T03:44:17.390"
+      }
+    ]
+  }
