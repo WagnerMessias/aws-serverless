@@ -3,7 +3,7 @@ const decoratorValidator = (fn, schema, argsType) => {
         const data = JSON.parse(event[argsType])
         //abortEarly == show all errors at once
         const {error, value} = await schema.validate(
-            data,{abortEarly:true})
+            data,{abortEarly:false})
 
         if(!error){
             //It change instace of arguments
